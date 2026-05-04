@@ -14,6 +14,7 @@ services:
     volumes:
       # Mapeia a pasta local './database' para a pasta '/app/data' no container
       - ./database:/app/data
+      - ./uploads:/app/files
     networks:
       - api-network
 

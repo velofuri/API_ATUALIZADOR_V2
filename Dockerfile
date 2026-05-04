@@ -18,7 +18,10 @@ RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app
 
 # Cria a pasta para o banco de dados
-RUN mkdir -p /app/data
+RUN mkdir -p /app/data /app/files
+RUN chown -R node:node /app
+
+USER node
 
 ENV NODE_ENV=production
 
