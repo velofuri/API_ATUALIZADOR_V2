@@ -16,13 +16,15 @@ WORKDIR /app
 RUN mkdir -p /app/data /app/files /app/node_modules
 
 ENV NODE_ENV=production
+ENV DATABASE_URL="file:/app/data/dev.db"
 
 COPY --from=build --chown=node:node /app/package*.json ./
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=build --chown=node:node /app/prisma ./prisma
+COPY --chown=node:node entrypoint.sh ./entrypoint.sh
 
-RUN chown -R node:node /app
+RUN chown -R node:node /app && chmod +x /app/entrypoint.sh
 
 USER node
 
@@ -30,4 +32,4 @@ RUN npm install --omit=dev
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["/app/entrypoint.sh"]
