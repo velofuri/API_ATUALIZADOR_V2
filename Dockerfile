@@ -23,7 +23,7 @@ COPY --from=build --chown=node:node /app/node_modules/.prisma ./node_modules/.pr
 COPY --from=build --chown=node:node /app/prisma ./prisma
 COPY --from=build --chown=node:node /app/prisma.config.ts ./prisma.config.ts
 
-RUN chown -R node:node /app/data /app/files /app && chmod +x /app/entrypoint.sh
+RUN chown -R node:node /app/data /app/files /app
 
 USER node
 
