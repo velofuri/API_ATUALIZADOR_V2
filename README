@@ -1,0 +1,69 @@
+# 🚀 API Atualizador v2
+
+## 📦 Pré-requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+- Node.js (versão 22 ou superior)
+- pnpm (`npm install -g pnpm`)
+
+---
+
+## 📥 Instalação
+
+Clone o repositório e instale as dependências:
+
+```bash
+git clone <url-do-repositorio>
+cd <nome-do-projeto>
+
+pnpm install
+```
+
+---
+
+## ⚙️ Configuração do ambiente
+
+Renomear o arquivo `.env.example` na raiz do projeto para `.env`:
+
+---
+
+## 🧱 Configuração do banco de dados (Prisma)
+
+1. Gerar o client do Prisma:
+
+```bash
+pnpm prisma generate
+```
+
+2. Rodar as migrations (caso existam):
+
+```bash
+pnpm prisma migrate dev
+```
+
+3. (Opcional) Visualizar o banco com Prisma Studio:
+
+```bash
+pnpm prisma studio
+```
+
+---
+
+## ▶️ Rodando o projeto
+
+Para iniciar o servidor em ambiente de desenvolvimento:
+
+```bash
+pnpm dev
+```
+
+---
+
+## 🧪 Scripts úteis
+
+```bash
+pnpm dev           # Inicia o servidor em modo desenvolvimento
+pnpm build         # Compila o TypeScript
+pnpm start         # Executa versão compilada
+```

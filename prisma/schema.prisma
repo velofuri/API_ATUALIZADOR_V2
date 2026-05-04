@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum StatusProcesso {
+  PENDENTE
+  PROCESSANDO
+  DELETADO
+  CONCLUIDO
+  ERRO
+}
+
+model EmpresaVersaoSistema {
+  id         String         @id @default(uuid())
+  sigla      String
+  nome       String?
+  versao     String
+  status     StatusProcesso @default(PENDENTE)
+  observacao String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("empresa_versao_sistema")
+}
