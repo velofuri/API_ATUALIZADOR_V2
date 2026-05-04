@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastify_api
+    container_name: atualizador_v2
     restart: always
     ports:
       - '3000:3000'
