@@ -16,7 +16,6 @@ WORKDIR /app
 RUN mkdir -p /app/data /app/files /app/node_modules
 
 ENV NODE_ENV=production
-ENV DATABASE_URL="file:/app/data/dev.db"
 
 COPY --from=build --chown=node:node /app/package*.json ./
 COPY --from=build --chown=node:node /app/dist ./dist
