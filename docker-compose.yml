@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     build:
@@ -12,7 +10,6 @@ services:
     env_file:
       - .env
     volumes:
-      # Mapeia a pasta local './database' para a pasta '/app/data' no container
       - ./database:/app/data
       - ./uploads:/app/files
     networks:
