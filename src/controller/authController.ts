@@ -11,7 +11,7 @@ export async function authController(request: FastifyRequest, reply: FastifyRepl
 
   const payload = {
     sub: 1, //id do usuário
-    role: 'adm',
+    role: 'user',
   }
 
   const token = await reply.jwtSign(payload)

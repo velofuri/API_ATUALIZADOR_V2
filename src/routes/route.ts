@@ -7,7 +7,7 @@ import {
   getAllRegisterByAcronymController as getAllRecordsByAcronymController,
 } from '../controller/updateController.js'
 import { downloadFileController, uploadFileController } from '../controller/fileController.js'
-import { authMiddleware } from '../middlewares/auth.js'
+import { serviceMiddleware, userMiddleware } from '../middlewares/auth.js'
 import { authController } from '../controller/authController.js'
 
 export async function routes(fastify: FastifyInstance) {
@@ -15,15 +15,16 @@ export async function routes(fastify: FastifyInstance) {
     return { result: 'API em execução' }
   })
 
+  //Rotas para usuários
   fastify.post('/auth', authController)
 
-  fastify.get('/records/:acronym', { preHandler: [authMiddleware] }, getAllRecordsByAcronymController)
+  fastify.get('/records/:acronym', { preHandler: [userMiddleware] }, getAllRecordsByAcronymController)
+  fastify.get('/update', { preHandler: [userMiddleware] }, getAllUpdatesController)
+  fastify.post('/update', { preHandler: [userMiddleware] }, createUpdateController)
+  fastify.put('/update', { preHandler: [userMiddleware] }, updateStatusByIdController)
+  fastify.post('/upload/file', { preHandler: [userMiddleware] }, uploadFileController)
 
-  fastify.get('/update', { preHandler: [authMiddleware] }, getAllUpdatesController)
-  fastify.get('/update/:acronym', { preHandler: [authMiddleware] }, getUpdateByAcronymController)
-  fastify.post('/update', { preHandler: [authMiddleware] }, createUpdateController)
-  fastify.put('/update', { preHandler: [authMiddleware] }, updateStatusByIdController)
-
-  fastify.post('/upload/file', { preHandler: [authMiddleware] }, uploadFileController)
-  fastify.get('/download/file/:version', { preHandler: [authMiddleware] }, downloadFileController)
+  //Rotas para serviço
+  fastify.get('/update/:acronym', { preHandler: [serviceMiddleware] }, getUpdateByAcronymController)
+  fastify.get('/download/file/:version', { preHandler: [serviceMiddleware] }, downloadFileController)
 }
