@@ -23,7 +23,7 @@ export async function getAllRegisterByAcronymController(request: FastifyRequest,
   return reply.code(200).send(response)
 }
 
-export async function getServiceUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
+export async function getUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
   const { acronym } = AcronymClientSchema.parse(request.params)
   const response = await getUpdateByAcronym(acronym)
 
@@ -32,17 +32,6 @@ export async function getServiceUpdateByAcronymController(request: FastifyReques
   }
 
   await updateStatusById({ id: response.id, status: 'PROCESSANDO' })
-
-  return reply.code(200).send(response)
-}
-
-export async function getWebUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
-  const { acronym } = AcronymClientSchema.parse(request.params)
-  const response = await getUpdateByAcronym(acronym)
-
-  if (response === null) {
-    throw new NotFoundError('Registro de atualização não encontrado.')
-  }
 
   return reply.code(200).send(response)
 }
