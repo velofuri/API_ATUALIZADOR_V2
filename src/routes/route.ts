@@ -18,10 +18,10 @@ export async function routes(fastify: FastifyInstance) {
   //Rotas para usuários
   fastify.post('/auth', authController)
 
-  fastify.get('/web/records/:acronym', { preHandler: [userMiddleware] }, getAllRecordsByAcronymController)
-  fastify.get('/web/update', { preHandler: [userMiddleware] }, getAllUpdatesController)
-  fastify.post('/web/update', { preHandler: [userMiddleware] }, createUpdateController)
-  fastify.post('/web/upload/file', { preHandler: [userMiddleware] }, uploadFileController)
+  fastify.get('/records/:acronym', { preHandler: [userMiddleware] }, getAllRecordsByAcronymController)
+  fastify.get('/update', { preHandler: [userMiddleware] }, getAllUpdatesController)
+  fastify.post('/update', { preHandler: [userMiddleware] }, createUpdateController)
+  fastify.post('/upload/file', { preHandler: [userMiddleware] }, uploadFileController)
 
   //Rotas para serviço
   fastify.put('/update', { preHandler: [serviceMiddleware] }, updateStatusByIdController)
