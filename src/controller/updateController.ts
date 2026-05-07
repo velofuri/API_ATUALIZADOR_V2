@@ -36,6 +36,17 @@ export async function getServiceUpdateByAcronymController(request: FastifyReques
   return reply.code(200).send(response)
 }
 
+export async function getWebUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
+  const { acronym } = AcronymClientSchema.parse(request.params)
+  const response = await getUpdateByAcronym(acronym)
+
+  if (response === null) {
+    throw new NotFoundError('Registro de atualização não encontrado.')
+  }
+
+  return reply.code(200).send(response)
+}
+
 export async function createUpdateController(request: FastifyRequest, reply: FastifyReply) {
   const body = UpdateRequestSchema.parse(request.body)
   const response = await createUpdate(body)
