@@ -4,8 +4,11 @@ import { env } from './lib/env.js'
 import { fastifyMultipart } from '@fastify/multipart'
 import { fastifyJwt } from '@fastify/jwt'
 import { setupErrorHandler } from './middlewares/errorHandler.js'
+import cors from '@fastify/cors'
 
 const app = Fastify({ logger: true })
+
+app.register(cors)
 
 app.register(fastifyJwt, { secret: env.SECRET_KEY, sign: { expiresIn: '1h' } })
 
