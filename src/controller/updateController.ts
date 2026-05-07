@@ -23,7 +23,7 @@ export async function getAllRegisterByAcronymController(request: FastifyRequest,
   return reply.code(200).send(response)
 }
 
-export async function getUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
+export async function getServiceUpdateByAcronymController(request: FastifyRequest, reply: FastifyReply) {
   const { acronym } = AcronymClientSchema.parse(request.params)
   const response = await getUpdateByAcronym(acronym)
 
