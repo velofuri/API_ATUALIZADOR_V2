@@ -7,7 +7,12 @@ import { BadRequestError, NotFoundError } from '../lib/appError.js'
 export async function uploadFileModel(file: MultipartFile): Promise<void> {
   const { filename, mimetype } = file
 
-  if (path.extname(filename) !== '.zip' || mimetype !== 'application/zip') {
+  const mimetypesValidos = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream']
+
+  const extensaoValida = path.extname(filename).toLowerCase() === '.zip'
+  const mimetypeValido = mimetypesValidos.includes(mimetype)
+
+  if (!extensaoValida || !mimetypeValido) {
     throw new BadRequestError('O arquivo precisa ser .zip')
   }
 

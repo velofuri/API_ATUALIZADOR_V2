@@ -15,13 +15,14 @@ export async function routes(fastify: FastifyInstance) {
     return { result: 'API em execução' }
   })
 
-  //Rotas para usuários
+  //Rotas para autenticação
   fastify.post('/auth', loginController)
   fastify.post('/logout', logoutController)
   fastify.get('/me', { preHandler: [userMiddleware] }, () => {
     return { ok: true }
   })
 
+  //Rotas para usuários
   fastify.get('/records/:acronym', { preHandler: [userMiddleware] }, getAllRecordsByAcronymController)
   fastify.get('/update', { preHandler: [userMiddleware] }, getAllUpdatesController)
   fastify.post('/update', { preHandler: [userMiddleware] }, createUpdateController)
