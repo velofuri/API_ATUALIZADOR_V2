@@ -17,6 +17,6 @@ export function setupErrorHandler(app: FastifyInstance) {
     }
 
     request.log.error({ err: error }, 'Log de Erro')
-    return reply.status(500).send({ message: 'Internal server error.' })
+    return reply.status(500).send({ message: 'Internal server error.', err: error })
   })
 }
