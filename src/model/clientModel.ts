@@ -3,9 +3,42 @@ import type { UpdateRequestDTO, UpdateStatusDTO } from '../DTO/updateRequestDTO.
 import { prisma } from '../lib/prisma.js'
 import fs from 'node:fs'
 import { AppError, BadRequestError, ConflictError, NotFoundError } from '../lib/appError.js'
+import type { PaginationQueryDTO } from '../DTO/paginationDTO.js'
 
-export async function getAllUpdates() {
-  return await prisma.empresaVersaoSistema.findMany()
+export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO) {
+  const where = acronym
+    ? {
+        sigla: {
+          contains: acronym,
+        },
+      }
+    : {}
+  const [data, totalRecords] = await Promise.all([
+    prisma.empresaVersaoSistema.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        id: 'desc',
+      },
+    }),
+
+    prisma.empresaVersaoSistema.count({
+      where,
+    }),
+  ])
+
+  const totalPages = Math.ceil(totalRecords / limit)
+
+  return {
+    data,
+    meta: {
+      total: totalRecords,
+      page,
+      limit,
+      totalPages,
+    },
+  }
 }
 
 export async function getAllRegisterByAcronym(acronym: string) {

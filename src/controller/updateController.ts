@@ -8,16 +8,12 @@ import {
 } from '../model/clientModel.js'
 import { UpdateRequestSchema, AcronymClientSchema, UpdateStatusSchema } from '../DTO/updateRequestDTO.js'
 import { NotFoundError } from '../lib/appError.js'
+import { paginationSchema } from '../DTO/paginationDTO.js'
 
 export async function getAllUpdatesController(request: FastifyRequest, reply: FastifyReply) {
-  const response = await getAllUpdates()
-  return reply.code(200).send(response)
-}
-
-export async function getAllRegisterByAcronymController(request: FastifyRequest, reply: FastifyReply) {
-  const { acronym } = AcronymClientSchema.parse(request.params)
-  const response = await getAllRegisterByAcronym(acronym)
-  if (response.length === 0) {
+  const { page, limit, acronym } = paginationSchema.parse(request.query)
+  const response = await getAllUpdates({ page, limit, acronym })
+  if (response.data.length === 0) {
     throw new NotFoundError('Nenhum registro encontrado.')
   }
   return reply.code(200).send(response)
