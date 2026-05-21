@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { uploadFileModel, downloadFileModel } from '../model/fileModel.js'
+import { uploadFileModel, downloadFileModel, getFileList } from '../model/fileModel.js'
 import { AppError, BadRequestError, NotFoundError } from '../lib/appError.js'
 
 export async function uploadFileController(request: FastifyRequest, reply: FastifyReply) {
@@ -44,4 +44,9 @@ export async function downloadFileController(request: FastifyRequest, reply: Fas
     request.log.error({ err: error }, 'Erro inesperado no download')
     throw new BadRequestError('Erro ao baixar arquivo')
   }
+}
+
+export async function getFileListController(request: FastifyRequest, reply: FastifyReply) {
+  const response = await getFileList()
+  return reply.code(200).send(response)
 }

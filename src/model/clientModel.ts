@@ -19,7 +19,7 @@ export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO
       skip: (page - 1) * limit,
       take: limit,
       orderBy: {
-        id: 'desc',
+        createdAt: 'desc',
       },
     }),
 

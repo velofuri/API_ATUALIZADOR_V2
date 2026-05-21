@@ -3,6 +3,7 @@ import path from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import type { MultipartFile } from '@fastify/multipart'
 import { BadRequestError, NotFoundError } from '../lib/appError.js'
+import { readdir } from 'node:fs/promises'
 
 export async function uploadFileModel(file: MultipartFile): Promise<void> {
   const { filename, mimetype } = file
@@ -41,4 +42,13 @@ export async function downloadFileModel(version: string) {
   const stream = fs.createReadStream(filePath)
 
   return stream
+}
+
+export async function getFileList() {
+  const pathDir = path.join(process.cwd(), 'files')
+  const itens = await readdir(pathDir)
+  const filteredFiles = itens
+    .filter((file) => file.startsWith('atualiza_'))
+    .map((file) => file.replace(/^atualiza_/, '').replace(/\.zip$/i, ''))
+  return filteredFiles
 }
