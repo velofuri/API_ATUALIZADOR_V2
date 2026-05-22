@@ -7,15 +7,19 @@
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
     "build": "prisma generate && tsc",
-    "start": "npx prisma migrate deploy && node dist/server.js"
+    "start": "npx prisma migrate deploy && node dist/server.js",
+    "create-user": "tsx src/cli/createUser.ts",
+    "reset-password": "tsx src/cli/resetPassword.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.32.1",
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.6.0",
+    "@types/prompts": "^2.4.9",
     "prisma": "^7.8.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
@@ -27,8 +31,10 @@
     "@fastify/multipart": "^10.0.0",
     "@prisma/adapter-better-sqlite3": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
+    "prompts": "^2.4.2",
     "zod": "^4.3.6"
   }
 }
