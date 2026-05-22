@@ -7,15 +7,12 @@ import {
   getAllRegisterByAcronym,
 } from '../model/clientModel.js'
 import { UpdateRequestSchema, AcronymClientSchema, UpdateStatusSchema } from '../DTO/updateRequestDTO.js'
-import { NotFoundError } from '../lib/appError.js'
+import { NotFoundError, UnauthorizedError } from '../lib/appError.js'
 import { paginationSchema } from '../DTO/paginationDTO.js'
 
 export async function getAllUpdatesController(request: FastifyRequest, reply: FastifyReply) {
   const { page, limit, acronym } = paginationSchema.parse(request.query)
   const response = await getAllUpdates({ page, limit, acronym })
-  if (response.data.length === 0) {
-    throw new NotFoundError('Nenhum registro encontrado.')
-  }
   return reply.code(200).send(response)
 }
 
@@ -34,7 +31,14 @@ export async function getUpdateByAcronymController(request: FastifyRequest, repl
 
 export async function createUpdateController(request: FastifyRequest, reply: FastifyReply) {
   const body = UpdateRequestSchema.parse(request.body)
-  const response = await createUpdate(body)
+
+  const user = request.user as { sub?: string }
+  if (!user.sub) {
+    throw new UnauthorizedError('Usuário não informado')
+  }
+
+  const createData = { ...body, createdById: user.sub }
+  const response = await createUpdate(createData)
   return reply.code(201).send(response)
 }
 

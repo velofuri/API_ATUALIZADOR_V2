@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { UpdateRequestDTO, UpdateStatusDTO } from '../DTO/updateRequestDTO.js'
+import type { UpdateCreateDTO, UpdateRequestDTO, UpdateStatusDTO } from '../DTO/updateRequestDTO.js'
 import { prisma } from '../lib/prisma.js'
 import fs from 'node:fs'
 import { AppError, BadRequestError, ConflictError, NotFoundError } from '../lib/appError.js'
@@ -20,6 +20,13 @@ export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO
       take: limit,
       orderBy: {
         createdAt: 'desc',
+      },
+      include: {
+        createdBy: {
+          select: {
+            name: true,
+          },
+        },
       },
     }),
 
@@ -60,21 +67,21 @@ export async function getUpdateByAcronym(acronym: string) {
   })
 }
 
-export async function createUpdate(clienteRequest: UpdateRequestDTO) {
+export async function createUpdate(clientRequest: UpdateCreateDTO) {
   const fileDir = path.join(process.cwd(), 'files')
 
   const files = fs.readdirSync(fileDir)
 
-  const versionExistsInFiles = files.some((file) => file.includes(`atualiza_${clienteRequest.versao}.zip`))
+  const versionExistsInFiles = files.some((file) => file.includes(`atualiza_${clientRequest.version}.zip`))
   if (!versionExistsInFiles) {
     throw new BadRequestError(
-      `Cadastro não efetuado. Versão ${clienteRequest.versao} não consta em nossa base de dados`,
+      `Cadastro não efetuado. Versão ${clientRequest.version} não consta em nossa base de dados`,
     )
   }
 
   const existUpdate = await prisma.systemVersion.findFirst({
     where: {
-      acronym: clienteRequest.sigla,
+      acronym: clientRequest.acronym,
       status: { in: ['PENDENTE', 'PROCESSANDO'] },
     },
   })
@@ -82,9 +89,10 @@ export async function createUpdate(clienteRequest: UpdateRequestDTO) {
   if (!existUpdate) {
     const response = await prisma.systemVersion.create({
       data: {
-        acronym: clienteRequest.sigla,
-        name: clienteRequest.nome ?? null,
-        version: clienteRequest.versao,
+        acronym: clientRequest.acronym,
+        name: clientRequest.name ?? null,
+        version: clientRequest.version,
+        createdById: clientRequest.createdById,
       },
     })
     return response
@@ -92,9 +100,9 @@ export async function createUpdate(clienteRequest: UpdateRequestDTO) {
   if (existUpdate.status === 'PENDENTE') {
     const response = await prisma.systemVersion.update({
       data: {
-        acronym: clienteRequest.sigla,
-        name: clienteRequest.nome ?? null,
-        version: clienteRequest.versao,
+        acronym: clientRequest.acronym,
+        name: clientRequest.name ?? null,
+        version: clientRequest.version,
       },
       where: {
         id: existUpdate.id,
@@ -103,7 +111,7 @@ export async function createUpdate(clienteRequest: UpdateRequestDTO) {
     return response
   }
   if (existUpdate.status === 'PROCESSANDO') {
-    throw new ConflictError(`Cadastro não efetuado. Existe uma atualização em andamento`)
+    throw new ConflictError(`Registro não efetuado. Existe uma atualização em andamento`)
   }
 }
 

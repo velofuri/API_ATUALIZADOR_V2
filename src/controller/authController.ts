@@ -1,19 +1,13 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { AuthSchema } from '../DTO/authDTO.js'
-import { UnauthorizedError } from '../lib/appError.js'
 import { env } from '../lib/env.js'
+import { auth } from '../model/authModel.js'
+import { UnauthorizedError } from '../lib/appError.js'
 
 export async function loginController(request: FastifyRequest, reply: FastifyReply) {
-  const { user, password } = AuthSchema.parse(request.body)
+  const { email, password } = AuthSchema.parse(request.body)
 
-  if (user !== 'lacteus' || password !== 'caseus46') {
-    throw new UnauthorizedError('Credenciais inválidas')
-  }
-
-  const payload = {
-    sub: 1, //id do usuário
-    role: 'user',
-  }
+  const payload = await auth({ email, password })
 
   const token = await reply.jwtSign(payload)
 
@@ -26,6 +20,7 @@ export async function loginController(request: FastifyRequest, reply: FastifyRep
   })
 
   return reply.send({
+    user: payload.name,
     mensagem: 'Login realizado com sucesso!',
   })
 }
@@ -33,4 +28,12 @@ export async function loginController(request: FastifyRequest, reply: FastifyRep
 export async function logoutController(request: FastifyRequest, reply: FastifyReply) {
   reply.clearCookie('access_token', { path: '/' })
   return reply.send({ message: 'Logout realizado com sucesso' })
+}
+
+export async function meController(request: FastifyRequest, reply: FastifyReply) {
+  const user = request.user
+  if (!user) {
+    throw new UnauthorizedError('Acesso negado')
+  }
+  return reply.send(user)
 }

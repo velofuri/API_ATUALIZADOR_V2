@@ -7,7 +7,7 @@ import {
 } from '../controller/updateController.js'
 import { downloadFileController, getFileListController, uploadFileController } from '../controller/fileController.js'
 import { serviceMiddleware, userMiddleware } from '../middlewares/auth.js'
-import { loginController, logoutController } from '../controller/authController.js'
+import { loginController, logoutController, meController } from '../controller/authController.js'
 
 export async function routes(fastify: FastifyInstance) {
   fastify.get('/health', () => {
@@ -17,9 +17,7 @@ export async function routes(fastify: FastifyInstance) {
   //Rotas para autenticação
   fastify.post('/auth', loginController)
   fastify.post('/logout', logoutController)
-  fastify.get('/me', { preHandler: [userMiddleware] }, () => {
-    return { ok: true }
-  })
+  fastify.get('/me', { preHandler: [userMiddleware] }, meController)
 
   //Rotas para usuários
   fastify.get('/update', { preHandler: [userMiddleware] }, getAllUpdatesController)

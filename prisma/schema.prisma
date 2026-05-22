@@ -25,26 +25,29 @@ enum Role {
 }
 
 model SystemVersion {
-  id        String         @id @default(uuid())
-  acronym   String
-  name      String?
-  version   String
-  status    StatusProcesso @default(PENDENTE)
-  note      String?
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id          String         @id @default(uuid())
+  acronym     String
+  name        String?
+  version     String
+  status      StatusProcesso @default(PENDENTE)
+  note        String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  createdById String
+  createdBy   User           @relation(fields: [createdById], references: [id])
 
   @@map("system_version")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String          @id @default(uuid())
+  email          String          @unique
+  name           String
+  password       String
+  role           Role            @default(USER)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  systemVersions SystemVersion[]
 
   @@map("user")
 }

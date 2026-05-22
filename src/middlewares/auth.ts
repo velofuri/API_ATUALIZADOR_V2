@@ -7,7 +7,7 @@ export async function userMiddleware(request: FastifyRequest, reply: FastifyRepl
   }
   await request.jwtVerify()
   const user = request.user as { role?: string }
-  if (!user || user.role !== 'user') {
+  if (!user || user.role === 'Service') {
     throw new UnauthorizedError('Acesso negado para serviços')
   }
 }
