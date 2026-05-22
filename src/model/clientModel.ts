@@ -8,13 +8,13 @@ import type { PaginationQueryDTO } from '../DTO/paginationDTO.js'
 export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO) {
   const where = acronym
     ? {
-        sigla: {
+        acronym: {
           contains: acronym,
         },
       }
     : {}
   const [data, totalRecords] = await Promise.all([
-    prisma.empresaVersaoSistema.findMany({
+    prisma.systemVersion.findMany({
       where,
       skip: (page - 1) * limit,
       take: limit,
@@ -23,7 +23,7 @@ export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO
       },
     }),
 
-    prisma.empresaVersaoSistema.count({
+    prisma.systemVersion.count({
       where,
     }),
   ])
@@ -42,19 +42,19 @@ export async function getAllUpdates({ page, limit, acronym }: PaginationQueryDTO
 }
 
 export async function getAllRegisterByAcronym(acronym: string) {
-  const response = await prisma.empresaVersaoSistema.findMany({
+  const response = await prisma.systemVersion.findMany({
     where: {
-      sigla: acronym,
+      acronym,
     },
   })
 
   return response
 }
 
-export async function getUpdateByAcronym(sigla: string) {
-  return await prisma.empresaVersaoSistema.findFirst({
+export async function getUpdateByAcronym(acronym: string) {
+  return await prisma.systemVersion.findFirst({
     where: {
-      sigla,
+      acronym,
       status: 'PENDENTE',
     },
   })
@@ -72,29 +72,29 @@ export async function createUpdate(clienteRequest: UpdateRequestDTO) {
     )
   }
 
-  const existUpdate = await prisma.empresaVersaoSistema.findFirst({
+  const existUpdate = await prisma.systemVersion.findFirst({
     where: {
-      sigla: clienteRequest.sigla,
+      acronym: clienteRequest.sigla,
       status: { in: ['PENDENTE', 'PROCESSANDO'] },
     },
   })
 
   if (!existUpdate) {
-    const response = await prisma.empresaVersaoSistema.create({
+    const response = await prisma.systemVersion.create({
       data: {
-        sigla: clienteRequest.sigla,
-        nome: clienteRequest.nome ?? null,
-        versao: clienteRequest.versao,
+        acronym: clienteRequest.sigla,
+        name: clienteRequest.nome ?? null,
+        version: clienteRequest.versao,
       },
     })
     return response
   }
   if (existUpdate.status === 'PENDENTE') {
-    const response = await prisma.empresaVersaoSistema.update({
+    const response = await prisma.systemVersion.update({
       data: {
-        sigla: clienteRequest.sigla,
-        nome: clienteRequest.nome ?? null,
-        versao: clienteRequest.versao,
+        acronym: clienteRequest.sigla,
+        name: clienteRequest.nome ?? null,
+        version: clienteRequest.versao,
       },
       where: {
         id: existUpdate.id,
@@ -109,10 +109,10 @@ export async function createUpdate(clienteRequest: UpdateRequestDTO) {
 
 export async function updateStatusById(request: UpdateStatusDTO) {
   try {
-    const response = await prisma.empresaVersaoSistema.update({
+    const response = await prisma.systemVersion.update({
       data: {
         status: request.status,
-        observacao: request.observacao ?? null,
+        note: request.note ?? null,
       },
       where: {
         id: request.id,

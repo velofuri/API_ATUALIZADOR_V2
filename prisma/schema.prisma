@@ -24,27 +24,27 @@ enum Role {
   USER
 }
 
-model EmpresaVersaoSistema {
-  id         String         @id @default(uuid())
-  sigla      String
-  nome       String?
-  versao     String
-  status     StatusProcesso @default(PENDENTE)
-  observacao String?
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+model SystemVersion {
+  id        String         @id @default(uuid())
+  acronym   String
+  name      String?
+  version   String
+  status    StatusProcesso @default(PENDENTE)
+  note      String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
-  @@map("empresa_versao_sistema")
+  @@map("system_version")
 }
 
-model Usuario {
+model User {
   id        String   @id @default(uuid())
   email     String   @unique
-  nome      String
-  senha     String
+  name      String
+  password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("usuario")
+  @@map("user")
 }

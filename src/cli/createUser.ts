@@ -29,7 +29,7 @@ async function createUser() {
     },
   ])
 
-  const existUser = await prisma.usuario.findUnique({
+  const existUser = await prisma.user.findUnique({
     where: {
       email: response.email,
     },
@@ -41,15 +41,15 @@ async function createUser() {
 
   const passwordHash = await bcrypt.hash('lacteus', 10)
 
-  const user = await prisma.usuario.create({
+  const user = await prisma.user.create({
     data: {
-      nome: response.name,
+      name: response.name,
       email: response.email,
       role: response.role,
-      senha: passwordHash,
+      password: passwordHash,
     },
     omit: {
-      senha: true,
+      password: true,
     },
   })
 

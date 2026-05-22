@@ -15,7 +15,7 @@ async function resetPassword() {
     },
   ])
 
-  const existUser = await prisma.usuario.findUnique({
+  const existUser = await prisma.user.findUnique({
     where: {
       email: response.email,
     },
@@ -27,15 +27,15 @@ async function resetPassword() {
 
   const passwordHash = await bcrypt.hash('lacteus', 10)
 
-  const user = await prisma.usuario.update({
+  const user = await prisma.user.update({
     where: {
       email: response.email,
     },
     data: {
-      senha: passwordHash,
+      password: passwordHash,
     },
     omit: {
-      senha: true,
+      password: true,
     },
   })
 

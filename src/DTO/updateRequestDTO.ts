@@ -20,7 +20,7 @@ export const AcronymClientSchema = z.object({
 export const UpdateStatusSchema = z.object({
   id: string(),
   status: z.nativeEnum(StatusProcesso),
-  observacao: z.string().optional(),
+  note: z.string().optional(),
 })
 
 export type UpdateRequestDTO = z.infer<typeof UpdateRequestSchema>
