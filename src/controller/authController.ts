@@ -14,7 +14,7 @@ export async function loginController(request: FastifyRequest, reply: FastifyRep
   reply.setCookie('access_token', token, {
     path: '/',
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
+    secure: env.COOKIE_SECURE,
     sameSite: 'strict',
     maxAge: 60 * 60 * 1, // 1 hora (em segundos)
   })
