@@ -5,7 +5,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   SECRET_KEY: z.string(),
   NODE_ENV: z.string(),
-  COOKIE_SECURE: z.coerce.boolean(),
+  COOKIE_SECURE: z.string().transform((value) => value.toLowerCase() === 'true'),
 })
 
 export const env = envSchema.parse(process.env)
