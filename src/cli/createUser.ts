@@ -31,7 +31,7 @@ async function createUser() {
 
   const existUser = await prisma.user.findUnique({
     where: {
-      email: response.email,
+      email: response.email.trim().toLowerCase(),
     },
   })
 
@@ -44,7 +44,7 @@ async function createUser() {
   const user = await prisma.user.create({
     data: {
       name: response.name,
-      email: response.email,
+      email: response.email.trim().toLowerCase(),
       role: response.role,
       password: passwordHash,
     },

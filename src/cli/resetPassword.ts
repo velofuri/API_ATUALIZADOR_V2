@@ -17,7 +17,7 @@ async function resetPassword() {
 
   const existUser = await prisma.user.findUnique({
     where: {
-      email: response.email,
+      email: response.email.trim().toLowerCase(),
     },
   })
 
@@ -29,7 +29,7 @@ async function resetPassword() {
 
   const user = await prisma.user.update({
     where: {
-      email: response.email,
+      email: response.email.trim().toLowerCase(),
     },
     data: {
       password: passwordHash,

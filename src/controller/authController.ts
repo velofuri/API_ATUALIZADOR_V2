@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import { AuthSchema } from '../DTO/authDTO.js'
 import { env } from '../lib/env.js'
-import { auth } from '../model/authModel.js'
+import { auth, changePassword } from '../model/authModel.js'
 import { UnauthorizedError } from '../lib/appError.js'
 
 export async function loginController(request: FastifyRequest, reply: FastifyReply) {
@@ -36,4 +36,19 @@ export async function meController(request: FastifyRequest, reply: FastifyReply)
     throw new UnauthorizedError('Acesso negado')
   }
   return reply.send(user)
+}
+
+export async function changePasswordController(request: FastifyRequest, reply: FastifyReply) {
+  const { password } = request.body as { password: string }
+  const user = request.user as { email?: string }
+  if (!user || !user.email) {
+    throw new UnauthorizedError('Acesso negado')
+  }
+  const email = user.email
+  const result = await changePassword({ email, password })
+
+  return reply.send({
+    data: result,
+    mensagem: 'Senha alterada com sucesso.',
+  })
 }
