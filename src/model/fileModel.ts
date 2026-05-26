@@ -29,6 +29,7 @@ export async function uploadFileModel(file: MultipartFile): Promise<void> {
     await pipeline(file.file, fs.createWriteStream(destPath))
     return
   } catch {
+    console.log('Cheguei ao catch do uploadfilemodel')
     throw new BadRequestError('Falha no envio do arquivo')
   }
 }

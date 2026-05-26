@@ -8,16 +8,16 @@ export async function uploadFileController(request: FastifyRequest, reply: Fasti
   if (!file) {
     throw new BadRequestError('Nenhum arquivo válido foi enviado')
   }
-  console.log('FiledName................. ', file.fieldname)
-  console.log('MimeType................. ', file.mimetype)
-  // if (file.fieldname !== 'arquivo') {
-  //   throw new BadRequestError('Campo inválido')
-  // }
+
+  if (file.fieldname !== 'arquivo') {
+    throw new BadRequestError('Campo inválido')
+  }
 
   try {
     await uploadFileModel(file)
     reply.code(200).send({ message: 'Arquivo enviado com sucesso!' })
   } catch (error) {
+    console.log('Cheguei ao catch do controller')
     if (error instanceof AppError) {
       throw error
     }
