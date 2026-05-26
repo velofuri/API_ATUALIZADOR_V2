@@ -10,7 +10,6 @@ export async function loginController(request: FastifyRequest, reply: FastifyRep
   const payload = await auth({ email, password })
 
   const token = await reply.jwtSign(payload)
-  console.log(env.COOKIE_SECURE)
   reply.setCookie('access_token', token, {
     path: '/',
     httpOnly: true,

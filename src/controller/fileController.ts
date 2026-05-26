@@ -17,7 +17,6 @@ export async function uploadFileController(request: FastifyRequest, reply: Fasti
     await uploadFileModel(file)
     reply.code(200).send({ message: 'Arquivo enviado com sucesso!' })
   } catch (error) {
-    console.log('Cheguei ao catch do controller')
     if (error instanceof AppError) {
       throw error
     }
